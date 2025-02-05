@@ -10,55 +10,80 @@ import CoreData
 
 struct BooksListView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    
-    @SectionedFetchRequest(
-        sectionIdentifier: \Book.rating,
-        sortDescriptors: [NSSortDescriptor(keyPath: \Book.rating, ascending: false),
-       NSSortDescriptor(keyPath: \Book.name, ascending: true)], animation: .default
-    )
-    
-    private var books: SectionedFetchResults<Int16, Book>
+    @State private var sections: [(id: Int16, books: [Book])] = []
 
   var body: some View {
-    NavigationView {
-      VStack {
-        BookFormView()
-        .padding()
-        List {
-          ForEach(books) { section in
-            Section(header: RatingView(rating: .constant(Int(section.id)))) {
-              ForEach(section) { book in
-                Text(book.name!)
-              }
-              .onDelete {
-                  deleteBooks(offsets: $0, sectionId: section.id)
+      NavigationStack {
+        VStack {
+            BookFormView{
+                fetchBooks()
+            }
+            .padding()
+          List {
+            ForEach(sections, id: \.id) { section in
+              Section(header: RatingView(rating: .constant(Int(section.id)))) {
+                ForEach(section.books) { book in
+                    Text(book.name!)
+                }
+                .onDelete { offsets in
+                  deleteBooks(offsets: offsets, sectionId: section.id)
+                  fetchBooks()
+                }
               }
             }
           }
         }
-      }
+        .toolbar {
+          ToolbarItem(placement: .navigationBarTrailing) {
+            EditButton()
+          }
+        }
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
           EditButton()
         }
+      }
+      .onAppear(perform: fetchBooks)
+      .onChange(of: viewContext.hasChanges) {
+        fetchBooks()
       }
       .navigationBarTitle("My Books")
     }
     .navigationViewStyle(.stack)
   }
 
-  private func deleteBooks(offsets: IndexSet, sectionId: Int16) {
-      if let section = books.first(where: { $0.id == sectionId }) {
-          offsets.map { section[$0] }
-              .forEach(viewContext.delete)
-      }
-      
-      do{
-          try viewContext.save()
+    private func fetchBooks() {
+      let request = Book.fetchRequest()
+      request.sortDescriptors = [
+        NSSortDescriptor(keyPath: \Book.rating, ascending: false),
+        NSSortDescriptor(keyPath: \Book.name, ascending: true)
+      ]
+
+      do {
+        let books = try viewContext.fetch(request)
+
+        let groupedBooks = Dictionary(grouping: books) { $0.rating }
+
+        sections = groupedBooks.map { (id: $0.key, books: $0.value) }
+          .sorted { $0.id > $1.id }
+
+
       } catch {
-          print("")
+        print("Error fetching books: \(error)")
       }
-  }
+    }
+
+    private func deleteBooks(offsets: IndexSet, sectionId: Int16) {
+      if let sectionIndex = sections.firstIndex(where: { $0.id == sectionId }) {
+        offsets.map { sections[sectionIndex].books[$0] }
+          .forEach(viewContext.delete)
+        do {
+          try viewContext.save()
+        } catch {
+          print("Error deleting books: \(error)")
+        }
+      }
+    }
 }
 
 struct ContentView_Previews: PreviewProvider {
@@ -67,4 +92,3 @@ struct ContentView_Previews: PreviewProvider {
           .environment(\.managedObjectContext, PersistenceManager.preview.container.viewContext)
   }
 }
-

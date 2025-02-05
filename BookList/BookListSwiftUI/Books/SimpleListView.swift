@@ -19,7 +19,7 @@ struct SimpleListView: View {
   var body: some View {
     NavigationView {
       VStack {
-        BookFormView()
+          BookFormView{}
           .padding()
 
         List {

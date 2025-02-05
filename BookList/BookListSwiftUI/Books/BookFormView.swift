@@ -12,6 +12,7 @@ struct BookFormView: View {
   @State private var bookName: String = ""
   @State private var rating = 0
     @Environment(\.managedObjectContext) private var viewContext
+    let onSave: () -> Void
 
   var body: some View {
     HStack {
@@ -42,6 +43,7 @@ struct BookFormView: View {
         }
         do{
             try viewContext.save()
+            onSave()
         } catch {
             print("")
         }
@@ -53,5 +55,5 @@ struct BookFormView: View {
 }
 
 #Preview {
-    BookFormView()
+    BookFormView{}
 }
