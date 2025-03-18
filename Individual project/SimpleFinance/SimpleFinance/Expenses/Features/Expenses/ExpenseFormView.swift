@@ -173,14 +173,10 @@ struct ExpenseFormView: View {
                 }
                 
                 Section {
-                    if let locationData = viewModel.expense?.locationInfo {
-                        if let locationInfo = LocationInfoTransformer().reverseTransformedValue(locationData) as? LocationInfo {
-                            VStack(alignment: .leading) {
-                                Text("Latitude: \(locationInfo.latitude)")
-                                Text("Longitude: \(locationInfo.longitude)")
-                            }
-                        } else {
-                            Text("Location could not be decoded")
+                    if let locationData = viewModel.locationInfo {
+                        VStack(alignment: .leading) {
+                            Text("Latitude: \(locationData.latitude)")
+                            Text("Longitude: \(locationData.longitude)")
                         }
                     } else {
                         Text("No location selected")
@@ -198,7 +194,7 @@ struct ExpenseFormView: View {
                             )
                         }
                     }
-                    if viewModel.expense?.locationInfo != nil {
+                    if viewModel.locationInfo != nil {
                         Button(
                             role: .destructive
                         ) {

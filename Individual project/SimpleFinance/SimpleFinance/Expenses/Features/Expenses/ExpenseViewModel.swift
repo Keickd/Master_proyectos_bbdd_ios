@@ -64,7 +64,7 @@ class ExpenseViewModel {
             persistentService.update(expense!)
         }
     }
-        
+      /*
     func saveAttachment() {
         guard let (data, fileName, _) = tempAttachmentData else { return }
         
@@ -86,11 +86,10 @@ class ExpenseViewModel {
                 expense?.attachmentInfo = nil
             }
         } catch {
-            // En caso de error, vaciar el attachmentInfo y mostrar el error
             expense?.attachmentInfo = nil
             print("Error saving attachment: \(error)")
         }
-    }
+    }*/
 
     func deleteAttachment() {
         tempAttachmentData = nil
@@ -148,16 +147,11 @@ class ExpenseViewModel {
             longitude: coordinate.longitude,
             name: name
         )
-        
-        if let encodedData = LocationInfoTransformer().transformedValue(updatedLocation) as? Data {
-            expense?.locationInfo = encodedData as NSData
-        } else {
-            print("Error: No se pudo codificar la ubicación")
-        }
-    }
 
+        self.locationInfo = updatedLocation
+    }
     
     func cleanLocation() {
-        expense?.locationInfo = nil
+        locationInfo = nil
     }
 }

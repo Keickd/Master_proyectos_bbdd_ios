@@ -26,7 +26,6 @@ class AttachmentInfoTransformer: ValueTransformer {
         guard let data = value as? NSData else { return nil }
         
         do {
-            // Usamos NSKeyedUnarchiver para decodificar Data a AttachmentInfo
             let attachment = try NSKeyedUnarchiver.unarchivedObject(ofClass: AttachmentInfo.self, from: data as Data)
             return attachment
         } catch {

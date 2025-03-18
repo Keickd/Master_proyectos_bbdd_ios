@@ -23,9 +23,7 @@ public class AttachmentInfo: NSObject, Codable, Identifiable, NSSecureCoding {
         self.contentType = contentType
     }
 
-    // Requerido por NSSecureCoding
     public required init?(coder aDecoder: NSCoder) {
-        // Decodificando el UUID como String
         guard let idString = aDecoder.decodeObject(of: NSString.self, forKey: "id") as String?,
               let id = UUID(uuidString: idString),
               let fileName = aDecoder.decodeObject(of: NSString.self, forKey: "fileName") as String?,
@@ -37,9 +35,7 @@ public class AttachmentInfo: NSObject, Codable, Identifiable, NSSecureCoding {
         self.contentType = contentType
     }
 
-    // Requerido por NSSecureCoding
     public func encode(with aCoder: NSCoder) {
-        // Codificando el UUID como String
         aCoder.encode(id.uuidString, forKey: "id")
         aCoder.encode(fileName, forKey: "fileName")
         aCoder.encode(contentType, forKey: "contentType")

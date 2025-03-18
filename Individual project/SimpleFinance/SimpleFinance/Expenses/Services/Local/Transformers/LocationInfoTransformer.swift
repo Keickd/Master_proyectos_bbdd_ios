@@ -9,20 +9,25 @@ import Foundation
 
 @objc(LocationInfoTransformer)
 class LocationInfoTransformer: ValueTransformer {
-    override func transformedValue(_ value: Any?) -> Any? {
+    
+    override public func transformedValue(_ value: Any?) -> Any? {
         guard let location = value as? LocationInfo else { return nil }
+        
         do {
-            return try JSONEncoder().encode(location)
+            let data = try NSKeyedArchiver.archivedData(withRootObject: location, requiringSecureCoding: true)
+            return data
         } catch {
             print("Error encoding LocationInfo: \(error)")
             return nil
         }
     }
-
-    override func reverseTransformedValue(_ value: Any?) -> Any? {
-        guard let data = value as? Data else { return nil }
+    
+    override public func reverseTransformedValue(_ value: Any?) -> Any? {
+        guard let data = value as? NSData else { return nil }
+        
         do {
-            return try JSONDecoder().decode(LocationInfo.self, from: data)
+            let location = try NSKeyedUnarchiver.unarchivedObject(ofClass: LocationInfo.self, from: data as Data)
+            return location
         } catch {
             print("Error decoding LocationInfo: \(error)")
             return nil
