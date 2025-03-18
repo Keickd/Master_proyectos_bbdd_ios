@@ -134,24 +134,19 @@ struct ExpenseFormView: View {
                 }
                 
                 Section {
-                    /*if let attachmentData = viewModel.expense.attachment {
-                        if let attachmentInfo = AttachmentInfoTransformer().reverseTransformedValue(attachmentData) as? AttachmentInfo {
-                            Text(attachmentInfo.fileName)
-                                .onTapGesture {
-                                    showingAttachmentPreview = true
-                                }
-
-                            Button(role: .destructive) {
-                                viewModel.deleteAttachment()
-                            } label: {
-                                Label("Delete Attachment", systemImage: "trash")
-                                    .foregroundStyle(.red)
+                    if let attachmentData = viewModel.attachmentInfo {
+                        Text(attachmentData.fileName)
+                            .onTapGesture {
+                                showingAttachmentPreview = true
                             }
-                        } else {
-                            Text("Attachment could not be decoded")
+
+                        Button(role: .destructive) {
+                            viewModel.deleteAttachment()
+                        } label: {
+                            Label("Delete Attachment", systemImage: "trash")
+                                .foregroundStyle(.red)
                         }
                     }
-
                     else {
                         Button {
                             showingAttachmentSheet = true
@@ -165,7 +160,7 @@ struct ExpenseFormView: View {
                                 )
                             }
                         }
-                    }*/
+                    }
                 } header: {
                     HStack {
                         Image(
@@ -178,7 +173,7 @@ struct ExpenseFormView: View {
                 }
                 
                 Section {
-                    /*if let locationData = viewModel.expense.location {
+                    if let locationData = viewModel.expense?.locationInfo {
                         if let locationInfo = LocationInfoTransformer().reverseTransformedValue(locationData) as? LocationInfo {
                             VStack(alignment: .leading) {
                                 Text("Latitude: \(locationInfo.latitude)")
@@ -189,7 +184,7 @@ struct ExpenseFormView: View {
                         }
                     } else {
                         Text("No location selected")
-                    }*/
+                    }
 
                     Button {
                         showingLocationPicker = true

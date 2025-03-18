@@ -22,8 +22,8 @@ struct LocationPickerView: View {
         ZStack {
             MapReader { proxy in
                 Map(position: $position) {
-                    if let locationInfo = viewModel.expense?.locationInfo {
-                       /* Marker(
+                    if let locationInfo = viewModel.locationInfo{
+                        Marker(
                             coordinate: CLLocationCoordinate2D(
                                 latitude: locationInfo.latitude,
                                 longitude: locationInfo.longitude
@@ -58,7 +58,7 @@ struct LocationPickerView: View {
                                     .blue
                                 )
                             }
-                        }*/
+                        }
                     }
                     
                     if let selectedLocation = selectedLocation {
@@ -114,13 +114,12 @@ struct LocationPickerView: View {
                 .onAppear {
                     locationManager.requestLocationPermission()
                     
-                    if let locationData = viewModel.expense?.locationInfo,
-                       let locationInfo = LocationInfoTransformer().reverseTransformedValue(locationData) as? LocationInfo {
+                    if let locationData = viewModel.locationInfo {
                         position = .region(
                             MKCoordinateRegion(
                                 center: CLLocationCoordinate2D(
-                                    latitude: locationInfo.latitude,
-                                    longitude: locationInfo.longitude
+                                    latitude: locationData.latitude,
+                                    longitude: locationData.longitude
                                 ),
                                 span: MKCoordinateSpan(
                                     latitudeDelta: 0.05,

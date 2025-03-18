@@ -132,7 +132,6 @@
       }
     },
     "Delete Attachment" : {
-      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -263,7 +262,6 @@
       }
     },
     "Latitude: %lf" : {
-      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -283,6 +281,9 @@
         }
       }
     },
+    "Location could not be decoded" : {
+
+    },
     "Location name " : {
       "localizations" : {
         "es" : {
@@ -294,7 +295,6 @@
       }
     },
     "Longitude: %lf" : {
-      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -315,7 +315,6 @@
       }
     },
     "No location selected" : {
-      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {

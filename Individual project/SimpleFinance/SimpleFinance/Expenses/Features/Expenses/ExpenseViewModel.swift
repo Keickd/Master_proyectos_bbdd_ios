@@ -10,6 +10,8 @@ class ExpenseViewModel {
     var amount: Double
     var date: Date
     var type: ExpenseType
+    var locationInfo: LocationInfo?
+    var attachmentInfo: AttachmentInfo?
 
     var expense: Expense?
 
@@ -21,12 +23,24 @@ class ExpenseViewModel {
         self.isNewExpense = isNewExpense
         self.persistentService = persistentService
         self.expense = expense
-
+        
         self.id = expense?.id ?? UUID()
         self.title = expense?.title ?? ""
         self.amount = expense?.amount ?? 0.0
         self.date = expense?.date ?? Date()
         self.type = ExpenseType(rawValue: expense?.type ?? "") ?? .other
+        
+        if let locationInfo = expense?.locationInfo as? LocationInfo {
+            self.locationInfo = locationInfo
+        } else {
+            self.locationInfo = nil
+        }
+
+        if let attachmentInfo = expense?.attachmentInfo as? AttachmentInfo {
+            self.attachmentInfo = attachmentInfo
+        } else {
+            self.attachmentInfo = nil
+        }
     }
     
     func saveExpense() {
@@ -37,12 +51,16 @@ class ExpenseViewModel {
             newExpense.amount = amount
             newExpense.date = date
             newExpense.type = type.rawValue
+            newExpense.attachmentInfo = attachmentInfo
+            newExpense.locationInfo = locationInfo
             persistentService.add(newExpense)
         } else {
             expense?.title = title
             expense?.amount = amount
             expense?.date = date
             expense?.type = type.rawValue
+            expense?.attachmentInfo = attachmentInfo
+            expense?.locationInfo = locationInfo
             persistentService.update(expense!)
         }
     }
@@ -61,27 +79,22 @@ class ExpenseViewModel {
                 contentType: "image/jpeg"
             )
             
-            expense?.attachmentInfo = attachmentInfo
+            if let encodedData = AttachmentInfoTransformer().transformedValue(attachmentInfo) as? NSData {
+                expense?.attachmentInfo = encodedData
+            } else {
+                print("Error: No se pudo transformar AttachmentInfo a NSData")
+                expense?.attachmentInfo = nil
+            }
         } catch {
+            // En caso de error, vaciar el attachmentInfo y mostrar el error
             expense?.attachmentInfo = nil
             print("Error saving attachment: \(error)")
         }
     }
-    
+
     func deleteAttachment() {
-        guard let attachmentData = expense?.attachmentInfo,
-              let attachmentInfo = try? JSONDecoder().decode(AttachmentInfo.self, from: attachmentData as! Data) else {
-            return
-        }
-
-        do {
-            try FileManager.default.removeItem(at: attachmentInfo.fileURL)
-        } catch {
-            print("Error deleting attachment: \(error)")
-        }
-
         tempAttachmentData = nil
-        expense?.attachmentInfo = nil
+        attachmentInfo = nil
     }
 
     func handleImageSelection(_ image: UIImage) {
@@ -98,7 +111,7 @@ class ExpenseViewModel {
             contentType: "image/jpeg"
         )
 
-        expense?.attachmentInfo = attachmentInfo
+        self.attachmentInfo = attachmentInfo
     }
 
     func handleDocumentSelection(_ result: Result<[URL], Error>) {
@@ -123,24 +136,26 @@ class ExpenseViewModel {
                 contentType: "application/pdf"
             )
 
-            expense?.attachmentInfo = attachmentInfo
+            self.attachmentInfo = attachmentInfo
         } catch {
             print("Error preparando PDF: \(error)")
         }
     }
 
-    // MARK: - Guardar y Limpiar Localización
-    
     func saveLocation(name: String, coordinate: CLLocationCoordinate2D) {
-
         let updatedLocation = LocationInfo(
             latitude: coordinate.latitude,
             longitude: coordinate.longitude,
             name: name
         )
         
-        expense?.locationInfo = updatedLocation
+        if let encodedData = LocationInfoTransformer().transformedValue(updatedLocation) as? Data {
+            expense?.locationInfo = encodedData as NSData
+        } else {
+            print("Error: No se pudo codificar la ubicación")
+        }
     }
+
     
     func cleanLocation() {
         expense?.locationInfo = nil

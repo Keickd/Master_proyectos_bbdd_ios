@@ -9,20 +9,26 @@ import Foundation
 
 @objc(AttachmentInfoTransformer)
 class AttachmentInfoTransformer: ValueTransformer {
-    override func transformedValue(_ value: Any?) -> Any? {
+    
+    override public func transformedValue(_ value: Any?) -> Any? {
         guard let attachment = value as? AttachmentInfo else { return nil }
+        
         do {
-            return try JSONEncoder().encode(attachment)
+            let data = try NSKeyedArchiver.archivedData(withRootObject: attachment, requiringSecureCoding: true)
+            return data
         } catch {
             print("Error encoding AttachmentInfo: \(error)")
             return nil
         }
     }
-
-    override func reverseTransformedValue(_ value: Any?) -> Any? {
-        guard let data = value as? Data else { return nil }
+    
+    override public func reverseTransformedValue(_ value: Any?) -> Any? {
+        guard let data = value as? NSData else { return nil }
+        
         do {
-            return try JSONDecoder().decode(AttachmentInfo.self, from: data)
+            // Usamos NSKeyedUnarchiver para decodificar Data a AttachmentInfo
+            let attachment = try NSKeyedUnarchiver.unarchivedObject(ofClass: AttachmentInfo.self, from: data as Data)
+            return attachment
         } catch {
             print("Error decoding AttachmentInfo: \(error)")
             return nil
