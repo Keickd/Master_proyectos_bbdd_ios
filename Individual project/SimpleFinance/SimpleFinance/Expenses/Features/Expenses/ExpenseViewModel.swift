@@ -64,32 +64,6 @@ class ExpenseViewModel {
             persistentService.update(expense!)
         }
     }
-      /*
-    func saveAttachment() {
-        guard let (data, fileName, _) = tempAttachmentData else { return }
-        
-        let fileURL = FileManager.default.documentsDirectory.appendingPathComponent(fileName)
-        
-        do {
-            try data.write(to: fileURL)
-            
-            let attachmentInfo = AttachmentInfo(
-                id: UUID(),
-                fileName: fileName,
-                contentType: "image/jpeg"
-            )
-            
-            if let encodedData = AttachmentInfoTransformer().transformedValue(attachmentInfo) as? NSData {
-                expense?.attachmentInfo = encodedData
-            } else {
-                print("Error: No se pudo transformar AttachmentInfo a NSData")
-                expense?.attachmentInfo = nil
-            }
-        } catch {
-            expense?.attachmentInfo = nil
-            print("Error saving attachment: \(error)")
-        }
-    }*/
 
     func deleteAttachment() {
         tempAttachmentData = nil

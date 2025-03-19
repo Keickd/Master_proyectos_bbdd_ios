@@ -230,7 +230,6 @@ struct ExpenseFormView: View {
                         viewModel.saveExpense()
                         dismiss()
                     }
-
                 }
                 
                 ToolbarItem(

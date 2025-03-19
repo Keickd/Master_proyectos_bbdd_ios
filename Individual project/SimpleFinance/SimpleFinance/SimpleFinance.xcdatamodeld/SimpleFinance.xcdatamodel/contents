@@ -2,10 +2,10 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23605" systemVersion="24D81" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Expense" representedClassName="Expense" syncable="YES" codeGenerationType="class">
         <attribute name="amount" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="attachmentInfo" optional="YES" attributeType="Transformable" valueTransformerName="AttachmentInfoTransformer"/>
+        <attribute name="attachmentInfo" optional="YES" attributeType="Transformable" valueTransformerName=""/>
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="locationInfo" optional="YES" attributeType="Transformable" valueTransformerName="LocationInfoTransformer"/>
+        <attribute name="locationInfo" optional="YES" attributeType="Transformable" valueTransformerName=""/>
         <attribute name="title" attributeType="String"/>
         <attribute name="type" optional="YES" attributeType="String"/>
     </entity>

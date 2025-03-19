@@ -11,11 +11,6 @@ import SwiftData
 @main
 struct SimpleFinanceApp: App {
     
-    init(){
-        ValueTransformer.setValueTransformer(LocationInfoTransformer(), forName: NSValueTransformerName("LocationInfoTransformer"))
-        ValueTransformer.setValueTransformer(AttachmentInfoTransformer(), forName: NSValueTransformerName("AttachmentInfoTransformer"))
-    }
-    
     let persistenceManager = PersistenceManager.shared
     
     var body: some Scene {

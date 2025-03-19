@@ -49,12 +49,10 @@ struct PersistenceManager {
         newExpense.type = ExpenseType.allCases.randomElement()!.rawValue
         
         let location = LocationInfo(latitude: 40.7128, longitude: -74.0060, name: "New York")
-        let locationData = LocationInfoTransformer().transformedValue(location) as? LocationInfo
-        newExpense.locationInfo = locationData
+        newExpense.locationInfo = location
         
         let attachment = AttachmentInfo(id: UUID(), fileName: "document\(i).pdf", contentType: "application/pdf")
-        let attachmentData = AttachmentInfoTransformer().transformedValue(attachment) as? AttachmentInfo
-        newExpense.attachmentInfo = attachmentData
+        newExpense.attachmentInfo = attachment
     }
 
     do {

@@ -31,15 +31,27 @@ final class LocalPersistenceService {
         saveContext()
         load()
     }
-
+    
     func update(_ expense: Expense) {
-        saveContext()
+        let request: NSFetchRequest<Expense> = Expense.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", expense.id! as any CVarArg as CVarArg)
 
-        if let index = expenses.firstIndex(where: { $0.id == expense.id }) {
-            expenses[index] = context.object(with: expense.objectID) as! Expense
+        do {
+            if let existingExpense = try context.fetch(request).first {
+                existingExpense.title = expense.title
+                existingExpense.amount = expense.amount
+                existingExpense.date = expense.date
+                existingExpense.type = expense.type
+                existingExpense.locationInfo = expense.locationInfo
+                existingExpense.attachmentInfo = expense.attachmentInfo
+                saveContext()
+                load()
+            }
+        } catch {
+            print("Error al actualizar el gasto: \(error.localizedDescription)")
         }
-        load()
     }
+
 
     func delete(_ expense: Expense) {
         context.delete(expense)

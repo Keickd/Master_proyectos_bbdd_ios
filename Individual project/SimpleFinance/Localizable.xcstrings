@@ -92,6 +92,7 @@
       }
     },
     "Close app" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
