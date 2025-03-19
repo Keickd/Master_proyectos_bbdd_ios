@@ -35,7 +35,7 @@ struct ExpenseListView: View {
             List(viewModel.expenses, id: \.id, selection: $selection) { expense in
                 ExpenseRow(expense: expense)
                     .offset(
-                        x: deletingExpense == expense.id || deletingExpenses.contains(expense.id!)
+                        x: deletingExpense == expense.id || deletingExpenses.contains(expense.id ?? UUID())
                             ? -UIScreen.main.bounds.width
                             : 0
                     )
